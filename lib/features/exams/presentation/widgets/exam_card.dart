@@ -1,0 +1,127 @@
+import 'package:flutter/material.dart';
+import 'package:online_exam/config/route_manager/routes.dart';
+import 'package:online_exam/core/helpers/my_responsive.dart';
+import 'package:online_exam/core/utils/app_assets.dart';
+import 'package:online_exam/core/utils/app_colors.dart';
+import 'package:online_exam/core/utils/app_text_styles.dart';
+import 'package:online_exam/core/values/app_strings.dart';
+import 'package:online_exam/features/exams/domain/entities/exam_entity.dart';
+
+import '../../../../core/shared_widgets/cached_network_image_wrapper.dart';
+
+class ExamCard extends StatelessWidget {
+  const ExamCard({super.key, required this.exam});
+
+  final ExamEntity exam;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, Routes.examDetailsRoute, arguments: exam);
+      },
+      child: Container(
+        height: MyResponsive.height(value: 90),
+        padding: MyResponsive.paddingAll(value: 10),
+        margin: MyResponsive.paddingOnly(bottom: 10),
+        decoration: BoxDecoration(
+          color: AppColors.baseWhite,
+          borderRadius: BorderRadius.circular(MyResponsive.radius(value: 10)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.questionsBarGray,
+              blurRadius: MyResponsive.radius(value: 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            exam.icon.isNotEmpty
+                ? CachedNetworkImageWrapper(
+                    imagePath: exam.icon,
+                    width: MyResponsive.width(value: 60),
+                    height: MyResponsive.height(value: 60),
+                    fit: BoxFit.contain,
+                  )
+                : Image.asset(
+                    AppAssets.examImagePath,
+                    width: MyResponsive.width(value: 60),
+                    height: MyResponsive.height(value: 60),
+                    fit: BoxFit.fill,
+                  ),
+            SizedBox(width: MyResponsive.width(value: 10)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(exam.title, style: AppTextStyles.medium16()),
+                          Text(
+                            '${exam.duration} ${AppStrings.minutes}',
+                            style: AppTextStyles.regular13().copyWith(
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '${exam.numberOfQuestions} ${AppStrings.questions}',
+                        style: AppTextStyles.regular13().copyWith(
+                          color: AppColors.baseGray,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: AppStrings.from,
+                          style: AppTextStyles.regular13().copyWith(
+                            color: AppColors.baseBlack,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: AppStrings.startTime,
+                              style: AppTextStyles.medium14().copyWith(
+                                color: AppColors.baseBlack,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: MyResponsive.width(value: 10)),
+                      RichText(
+                        text: TextSpan(
+                          text: AppStrings.to,
+                          style: AppTextStyles.regular13().copyWith(
+                            color: AppColors.baseBlack,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: AppStrings.endTime,
+                              style: AppTextStyles.medium14().copyWith(
+                                color: AppColors.baseBlack,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
